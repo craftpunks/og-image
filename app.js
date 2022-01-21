@@ -69,6 +69,6 @@ function compileTemplate(html, vars, options) {
     return res
 }
 
-app.listen(3000)
+app.listen(3333)
 
 export const viteNodeApp = app
