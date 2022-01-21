@@ -1,0 +1,23 @@
+{
+    "name": "og-image",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "vite",
+        "nodemon": "nodemon app"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "vite": "^2.7.13",
+        "vite-plugin-node": "^0.0.15"
+    },
+    "dependencies": {
+        "express": "^4.17.2",
+        "node-html-to-image": "^3.2.0"
+    }
+}
