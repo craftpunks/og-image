@@ -1,4 +1,5 @@
  #!/usr/bin/env bash
 
 set -e
-npm run start
+nvm use 17.3
+node app.js
