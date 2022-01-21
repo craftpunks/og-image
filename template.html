@@ -34,21 +34,27 @@
             border: 3px solid #000;
         }
         
-        .text {
+        .container {
             position: absolute;
             top: 30px;
             right: 30px;
             left: 30px;
-            bottom: 100px;
-            /*word-break: break-all;*/
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .text {
+            flex: 1;
         }
         
         .domain {
-            position: absolute;
-            right: 30px;
-            left: 30px;
-            bottom: 30px;
             font-size: 22px;
+        }
+        
+        .domain:empty {
+            display: none;
         }
         
         .spy {
@@ -62,13 +68,14 @@
 <body class="|body-css|">
     <section>
         <div class="rectangle"></div>
-        <!--
-            <div class="text" style="font-size:|font|px; line-height:|lineHeight|px;">|text|</div>
-        -->
-        <div class="text">
-            <div class="spy">|text|</div>
+
+        <div class="container">
+            <div class="text">
+                <div class="spy">|text|</div>
+            </div>
+            <div class="domain">|domain|</div>
         </div>
-        <div class="domain">|domain|</div>
+
     </section>
 </body>
 

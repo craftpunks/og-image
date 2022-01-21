@@ -20,6 +20,9 @@ app.get('/img/:text/:domain?/:b64?', async function(req, res) {
     if (isBase64) text = Buffer.from(text, 'base64').toString()
     text = text.trim().replaceAll('\n', '<br />')
 
+    let domain = req.params.domain || ''
+    if (isBase64) domain = Buffer.from(domain, 'base64').toString()
+
     const maxLength = 200
     if (text.length > maxLength) text = text.substring(0, maxLength) + '...'
 
@@ -27,11 +30,8 @@ app.get('/img/:text/:domain?/:b64?', async function(req, res) {
 
     const params = {
         text,
-        domain: req.params.domain,
-        //font: Math.floor(Math.sqrt((740 * 190) / text.length)) * 1.15,
+        domain
     }
-
-    params.lineHeight = 'auto' //params.font * 0.5;
 
     const html = compileTemplate(raw, params, {
         debug: viewDebug
@@ -42,17 +42,12 @@ app.get('/img/:text/:domain?/:b64?', async function(req, res) {
     const image = await nodeHtmlToImage({
         html,
         waitUntil: 'domcontentloaded'
-            /*beforeScreenshot: (page) => {
-                page.$eval('.spy', (text) => {
-                })
-            }*/
     })
 
     res.writeHead(200, {
-        'Content-Type': 'image/png'
+        'Content-Type': 'image/png',
+        'Cache-Control': 'max-age=86400'
     })
-
-    // 6419
 
     res.end(image, 'binary')
 })
