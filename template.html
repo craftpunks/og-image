@@ -21,6 +21,10 @@
             background: palevioletred;
         }
         
+        body.debug .spy {
+            background: orange;
+        }
+        
         .rectangle {
             position: absolute;
             top: 10px;
@@ -36,8 +40,7 @@
             right: 30px;
             left: 30px;
             bottom: 100px;
-            font-size: 36px;
-            line-height: 40px;
+            /*word-break: break-all;*/
         }
         
         .domain {
@@ -47,15 +50,54 @@
             bottom: 30px;
             font-size: 22px;
         }
+        
+        .spy {
+            font-size: 16px;
+            display: inline-block;
+        }
     </style>
+
 </head>
 
 <body class="|body-css|">
     <section>
         <div class="rectangle"></div>
-        <div class="text">|text|</div>
+        <!--
+            <div class="text" style="font-size:|font|px; line-height:|lineHeight|px;">|text|</div>
+        -->
+        <div class="text">
+            <div class="spy">|text|</div>
+        </div>
         <div class="domain">|domain|</div>
     </section>
 </body>
+
+<script>
+    function updateSize() {
+        const wrapper = document.querySelector('.text').getBoundingClientRect()
+        const text = document.querySelector('.spy')
+        let inside = true
+        let size = 16;
+
+        while (inside) {
+            const pos = text.getBoundingClientRect()
+            const height = pos.height
+            const width = pos.width
+
+            if (height > wrapper.height || width > wrapper.width) {
+                inside = false
+                size -= 1
+            } else {
+                size += 1
+            }
+
+            text.style.fontSize = size + 'px'
+        }
+    }
+
+    (function() {
+        updateSize()
+    })()
+</script>
 
 </html>
