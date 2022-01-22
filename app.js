@@ -26,7 +26,7 @@ app.get('/img/:text?/:footer?', async function(req, res) {
         res.status(400).send('Invalid base64 for text parameter')
         return
     }
-    text = atob(text).trim().replaceAll('\n', '<br />')
+    text = Buffer.from(text, 'base64').toString().trim().replaceAll('\n', '<br />')
     if (text.length > maxLength) text = text.substring(0, maxLength) + '...'
 
     // check footer
@@ -36,7 +36,7 @@ app.get('/img/:text?/:footer?', async function(req, res) {
             res.status(400).send('Invalid base64 for footer parameter')
             return
         }
-        footer = atob(footer).trim()
+        footer = Buffer.from(footer, 'base64').toString()
         if (footer.length > maxLength) footer = footer.substring(0, maxLength) + '...'
     } else {
         footer = ''
