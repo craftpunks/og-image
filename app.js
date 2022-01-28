@@ -2,6 +2,8 @@ import { readFile } from 'fs/promises'
 import express from 'express'
 import nodeHtmlToImage from 'node-html-to-image'
 
+const inDocker = process.argv.includes('--docker')
+
 const app = express()
 
 // Encodate b64 dans les devtool : btoa("Je suis un text\nsur deux lignes")
@@ -42,6 +44,10 @@ app.get('/img/:text?/:footer?', async function(req, res) {
         footer = ''
     }
 
+    console.log('Rendering...')
+    console.log('→ Text:', text)
+    console.log('→ Footer:', footer)
+
     const raw = await getTemplate()
 
     const params = {
@@ -55,10 +61,18 @@ app.get('/img/:text?/:footer?', async function(req, res) {
 
     if (viewHTML) return res.send(html)
 
-    const image = await nodeHtmlToImage({
+    const options = {
         html,
-        waitUntil: 'domcontentloaded'
-    })
+        waitUntil: 'domcontentloaded',
+    }
+
+    if(inDocker){
+        options.puppeteerArgs = {
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        }
+    }
+
+    const image = await nodeHtmlToImage(options)
 
     res.writeHead(200, {
         'Content-Type': 'image/png',
@@ -76,7 +90,6 @@ async function getTemplate() {
     try {
         raw = await readFile('./template.html', { encoding: 'utf8' })
     } catch (err) {
-        console.log(err)
         throw new Error('Fuck ! template not found')
     }
 
@@ -98,12 +111,13 @@ function compileTemplate(html, vars, options) {
 // not perfect but enough for now
 function isBase64(str) {
     try {
-        return btoa(atob(str)) == str;
+        return btoa(atob(str)) === str
     } catch (err) {
-        return false;
+        return false
     }
 }
 
-app.listen(3333)
-
-export const viteNodeApp = app
+const port = process.env.PORT || 3333
+app.listen(port, () => {
+    console.log(`App is listening on ${port}`)
+})

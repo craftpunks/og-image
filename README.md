@@ -51,5 +51,15 @@ node app.js
 
 We highly recommend to use [Cloudflare](https://www.cloudflare.com/) to proxy/cache your service.
 
+## Docker (experimental)  
 
+1. Build the image
+```shell
+npm run docker:build
+```
+
+2. Run the image (change the 4444 port at your convenience)
+```shell
+docker run -p 4444:3333 -d toorop/og-image
+```
 
