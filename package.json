@@ -1,6 +1,6 @@
 {
   "name": "og-image",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "type": "module",
   "main": "index.js",
@@ -8,11 +8,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
     "nodemon": "nodemon app",
-    "docker:build": "docker build . -t toorop/og-image"
+    "docker:build": "docker build . -t og-image"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "vite": "^2.7.13",
     "vite-plugin-node": "^0.0.15"
