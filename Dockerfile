@@ -31,6 +31,9 @@ RUN apt-get update \
 # Create app directory
 WORKDIR /usr/src/app
 
+# Add user
+RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser
+
 # Install app dependencies
 COPY --chown=pptruser:pptruser package*.json ./
 
@@ -38,10 +41,9 @@ COPY --chown=pptruser:pptruser package*.json ./
 RUN npm install
 
 # Install puppeteer so it's available in the container.
-	# Add user so we don't need --no-sandbox.
-	# same layer as npm install to keep re-chowned files from using up several hundred MBs more space
-RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
-    && mkdir -p /home/pptruser/Downloads \
+# Add user so we don't need --no-sandbox.
+# same layer as npm install to keep re-chowned files from using up several hundred MBs more space
+RUN mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser \
     && chown -R pptruser:pptruser /usr/src/app
 
