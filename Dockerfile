@@ -50,7 +50,7 @@ RUN mkdir -p /home/pptruser/Downloads \
 # Bundle app source
 COPY --chown=pptruser:pptruser . .
 
-EXPOSE 8080
+EXPOSE 3333
 
 # Run everything after as non-privileged user.
 USER pptruser
