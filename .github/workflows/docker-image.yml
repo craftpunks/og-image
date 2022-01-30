@@ -1,0 +1,29 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+
+env:
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+  # Version of the image
+  VERSION: ${{ github.ref_name }}
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME:$VERSION
+      - name: Login to Github container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push the Docker image to Github container registry
+        run: docker push $IMAGE_NAME:$VERSION
