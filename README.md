@@ -67,7 +67,7 @@ docker pull ghcr.io/craftpunks/og-image:latest
 
 And then you have just to run the image (change the 4444 port at your convenience)
 ```shell
-docker run -p 4444:3333 -d craftpunks/og-image
+docker run -p 4444:3333 -d ghcr.io/craftpunks/og-image
 ```
 
 PS: we highly recommend using a CDN/Cache like [Cloudflare](https://www.cloudflare.com/) to proxy/cache your service.
