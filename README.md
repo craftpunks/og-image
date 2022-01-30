@@ -39,27 +39,35 @@ Will produce this image:
 
 ## Host your own open graph image generator as a service
 
+### From scratch
 If tou want to host your own service, you need a Node.js server available on the internet.
 
 And:
 
 ```shell
-git clone git@github.com:toorop/og-image.git
+git clone git@github.com:craftpunks/og-image.git
 npm install
 node app.js
 ```
 
-We highly recommend to use [Cloudflare](https://www.cloudflare.com/) to proxy/cache your service.
 
-## Docker (experimental)  
+### Or with Docker  
 
-1. Build the image
+You can either build your own image or use our [built one](https://github.com/craftpunks/og-image/pkgs/container/og-image).
+
+Build the image:
 ```shell
 npm run docker:build
 ```
 
-2. Run the image (change the 4444 port at your convenience)
+Or use our built one:
 ```shell
-docker run -p 4444:3333 -d toorop/og-image
+docker pull ghcr.io/craftpunks/og-image:latest
 ```
 
+And then you have just to run the image (change the 4444 port at your convenience)
+```shell
+docker run -p 4444:3333 -d craftpunks/og-image
+```
+
+PS: we highly recommend using a CDN/Cache like [Cloudflare](https://www.cloudflare.com/) to proxy/cache your service.
