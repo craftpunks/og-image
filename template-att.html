@@ -1,0 +1,118 @@
+<html>
+
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            background-color: #05131f ;
+            color: #fff;
+        }
+
+        body,
+        section {
+            width: 800px;
+            height: 418px;
+            position: relative;
+        }
+
+        body.debug .text {
+            background: palegreen;
+        }
+
+        body.debug .domain {
+            background: palevioletred;
+        }
+
+        body.debug .spy {
+            background: orange;
+        }
+
+        .rectangle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            bottom: 10px;
+            left: 10px;
+            border: 3px solid #fff;
+        }
+
+        .container {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            left: 30px;
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text {
+            flex: 1;
+            line-height: 1;
+            text-align: center;
+        }
+
+        .domain {
+            margin-top: 30px;
+            font-size: 22px;
+        }
+
+        .domain:empty {
+            display: none;
+        }
+
+        .spy {
+            font-size: 16px;
+            display: inline-block;
+        }
+    </style>
+
+</head>
+
+<body class="|body-css|">
+<section>
+    <div class="rectangle"></div>
+    <div class="container">
+        <div class="text">
+            <div class="spy">|text|</div>
+        </div>
+        <div class="domain">|footer|</div>
+    </div>
+
+</section>
+</body>
+
+<script>
+  function updateSize() {
+    const wrapper = document.querySelector('.text').getBoundingClientRect()
+    const text = document.querySelector('.spy')
+    let inside = true
+    let size = 16;
+
+    while (inside) {
+      const pos = text.getBoundingClientRect()
+      const height = pos.height
+      const width = pos.width
+      console.log(height, width)
+      console.log(wrapper.height, wrapper.width)
+
+      if (height > wrapper.height || width > wrapper.width) {
+        inside = false
+        size -= 1
+      } else {
+        size += 1
+      }
+
+      text.style.fontSize = size + 'px'
+      //text.style.lineHeight = size * 0.90 + 'px'
+    }
+  }
+
+  (function () {
+    updateSize()
+  })()
+</script>
+
+</html>

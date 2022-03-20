@@ -15,6 +15,7 @@ const app = express()
 app.get('/img/:text?/:footer?', async function(req, res) {
     const viewDebug = 'debug' in req.query
     const viewHTML = 'html' in req.query
+    const template = req.query.tpl || 'default'
     const maxLength = 200
 
     // check text
@@ -48,7 +49,10 @@ app.get('/img/:text?/:footer?', async function(req, res) {
     console.log('→ Text:', text)
     console.log('→ Footer:', footer)
 
-    const raw = await getTemplate()
+    // debug
+    //text = "AutoTube now supports IPFS"
+
+    const raw = await getTemplate(template)
 
     const params = {
         text,
@@ -84,15 +88,18 @@ app.get('/img/:text?/:footer?', async function(req, res) {
     res.end(image, 'binary')
 })
 
-async function getTemplate() {
+async function getTemplate(template) {
     let raw
-
+    console.log('template', template)
     try {
-        raw = await readFile('./template.html', { encoding: 'utf8' })
+        if (template === 'default') {
+            raw = await readFile('./template.html', 'utf8')
+        } else {
+            raw = await readFile('./template-' + template + '.html', 'utf8')
+        }
     } catch (err) {
-        throw new Error('Fuck ! template not found')
+        throw new Error(`Fuck ! template ${template} not found`)
     }
-
     return raw
 }
 
