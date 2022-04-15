@@ -1,112 +1,108 @@
 <html>
-
-<head>
+  <head>
     <style>
-        * {
-            box-sizing: border-box;
-        }
+      * {
+        box-sizing: border-box;
+      }
 
-        body,
-        section {
-            width: 800px;
-            height: 418px;
-            position: relative;
-        }
+      body,
+      section {
+        width: 800px;
+        height: 418px;
+        position: relative;
+      }
 
-        body.debug .text {
-            background: palegreen;
-        }
+      body.debug .text {
+        background: palegreen;
+      }
 
-        body.debug .domain {
-            background: palevioletred;
-        }
+      body.debug .domain {
+        background: palevioletred;
+      }
 
-        body.debug .spy {
-            background: orange;
-        }
+      body.debug .spy {
+        background: orange;
+      }
 
-        .rectangle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            bottom: 10px;
-            left: 10px;
-            border: 3px solid #000;
-        }
+      .rectangle {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        border: 3px solid #000;
+      }
 
-        .container {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            left: 30px;
-            bottom: 30px;
-            display: flex;
-            flex-direction: column;
-        }
+      .container {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        left: 30px;
+        bottom: 30px;
+        display: flex;
+        flex-direction: column;
+      }
 
-        .text {
-            flex: 1;
-            line-height: 12ch;
-        }
+      .text {
+        flex: 1;
+        line-height: 12ch;
+      }
 
-        .domain {
-            margin-top: 30px;
-            font-size: 22px;
-        }
+      .domain {
+        margin-top: 30px;
+        font-size: 22px;
+      }
 
-        .domain:empty {
-            display: none;
-        }
+      .domain:empty {
+        display: none;
+      }
 
-        .spy {
-            font-size: 16px;
-            display: inline-block;
-        }
+      .spy {
+        font-size: 16px;
+        display: inline-block;
+      }
     </style>
+  </head>
 
-</head>
-
-<body class="|body-css|">
+  <body class="|body-css|">
     <section>
-        <div class="rectangle"></div>
+      <div class="rectangle"></div>
 
-        <div class="container">
-            <div class="text">
-                <div class="spy">|text|</div>
-            </div>
-            <div class="domain">|footer|</div>
+      <div class="container">
+        <div class="text">
+          <div class="spy">|text|</div>
         </div>
-
+        <div class="domain">|footer|</div>
+      </div>
     </section>
-</body>
+  </body>
 
-<script>
+  <script>
     function updateSize() {
-        const wrapper = document.querySelector('.text').getBoundingClientRect()
-        const text = document.querySelector('.spy')
-        let inside = true
-        let size = 16;
+      const wrapper = document.querySelector('.text').getBoundingClientRect()
+      const text = document.querySelector('.spy')
+      let inside = true
+      let size = 16
 
-        while (inside) {
-            const pos = text.getBoundingClientRect()
-            const height = pos.height
-            const width = pos.width
+      while (inside) {
+        const pos = text.getBoundingClientRect()
+        const height = pos.height
+        const width = pos.width
 
-            if (height > wrapper.height || width > wrapper.width) {
-                inside = false
-                size -= 1
-            } else {
-                size += 1
-            }
-
-            text.style.fontSize = size + 'px'
-            text.style.lineHeight = size * 0.90 + 'px'
+        if (height > wrapper.height || width > wrapper.width) {
+          inside = false
+          size -= 1
+        } else {
+          size += 1
         }
+
+        text.style.fontSize = size + 'px'
+        text.style.lineHeight = size * 0.9 + 'px'
+      }
     }
 
-    (function() {
-        updateSize()
+    ;(function () {
+      updateSize()
     })()
-</script>
-
+  </script>
 </html>
