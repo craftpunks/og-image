@@ -1,0 +1,154 @@
+<html>
+    <head>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body,
+            section {
+                width: 800px;
+                height: 418px;
+                position: relative;
+
+                background-color: #181818;
+                color: #f9f5d7;
+                font-family: Menlo, Fira Code, Monaco, Lucida Console,
+                    Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono,
+                    Courier New, monospace, serif;
+            }
+
+            body.debug .text {
+                background: palegreen;
+            }
+
+            body.debug .domain {
+                background: palevioletred;
+            }
+
+            body.debug .spy {
+                background: orange;
+            }
+
+            .rectangle {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                bottom: 10px;
+                left: 10px;
+
+                border: 10px solid;
+                border-image-slice: 1;
+                border-width: 5px;
+
+                border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+            }
+
+            .container {
+                position: absolute;
+                top: 30px;
+                right: 30px;
+                left: 30px;
+                bottom: 30px;
+                display: flex;
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .text {
+                flex: 1;
+                /* line-height: 12ch; */
+            }
+
+            .domain {
+                margin-top: 30px;
+                font-size: 22px;
+            }
+
+            .domain:empty {
+                display: none;
+            }
+
+            .spy {
+                font-size: 3.5rem;
+                display: inline-block;
+                margin: 0;
+                /* line-height: 3rem; */
+                color: #ff97cb;
+                font-weight: bold;
+            }
+
+            .dim {
+                opacity: 0.7;
+            }
+        </style>
+    </head>
+
+    <body class="">
+        <section>
+            <div class="rectangle"></div>
+
+            <div class="container">
+                <div class="text">
+                    <div class="spy" id="text">hi</div>
+                </div>
+                <div class="domain">
+                    <span id="footer"></span> -
+                    <span id="date" class="dim"></span>
+                </div>
+            </div>
+        </section>
+    </body>
+
+    <script>
+        // function updateSize() {
+        //   const wrapper = document.querySelector('.text').getBoundingClientRect()
+        //   const text = document.querySelector('.spy')
+        //   let inside = true
+        //   let size = 16
+
+        //   while (inside) {
+        //     const pos = text.getBoundingClientRect()
+        //     const height = pos.height
+        //     const width = pos.width
+
+        //     if (height > wrapper.height || width > wrapper.width) {
+        //       inside = false
+        //       size -= 1
+        //     } else {
+        //       size += 1
+        //     }
+
+        //     text.style.fontSize = size + 'px'
+        //     text.style.lineHeight = size * 0.9 + 'px'
+        //   }
+        // }
+
+        // ;(function () {
+        //   updateSize()
+        // })()
+
+        const usp = new URLSearchParams(window.location.search);
+        const debug_vals = { text: null, footer: null };
+
+        if (usp.get("t")) {
+            // limit to 200 characters, if longer, truncate and add ellipsis
+            if (usp.get("t").length > 200) {
+                debug_vals.text = usp.get("t").substring(0, 197) + "...";
+            } else {
+                debug_vals.text = usp.get("t");
+            }
+        }
+        if (usp.get("f")) {
+            // limit to 200 characters, if longer, truncate and add ellipsis
+            if (usp.get("f").length > 200) {
+                debug_vals.footer = usp.get("f").substring(0, 197) + "...";
+            } else {
+                debug_vals.footer = usp.get("f");
+            }
+        }
+
+        document.getElementById("text").innerHTML = debug_vals.text;
+        document.getElementById("footer").innerHTML = debug_vals.footer;
+    </script>
+</html>

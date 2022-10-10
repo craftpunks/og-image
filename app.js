@@ -1,5 +1,5 @@
-import { readFile } from 'fs/promises'
 import express from 'express'
+import { readFile } from 'fs/promises'
 import nodeHtmlToImage from 'node-html-to-image'
 
 const inDocker = process.argv.includes('--docker')
@@ -12,52 +12,34 @@ const app = express()
 // ?html pour afficher la version HTML avant conversion
 // ? sur text ça permet d'afficher une erreur plus parlante si pas de text
 
-app.get('/img/:text?/:footer?', async function(req, res) {
+app.get('/img', async function(req, res) {
     const viewDebug = 'debug' in req.query
     const viewHTML = 'html' in req.query
     const template = req.query.tpl || 'default'
-    const maxLength = 200
+    const maxLength = 120;
 
-    // check text
-    if (!req.params.text) {
-        res.status(400).send('Missing text parameter')
-        return
+    let params = {
+        text: req.query.text || '',
+        footer: req.query.footer || '',
+        date: req.query.date || '',
     }
-    let text = req.params.text
-    // valid base64 ?
-    if (!isBase64(text)) {
-        res.status(400).send('Invalid base64 for text parameter')
-        return
-    }
-    text = Buffer.from(text, 'base64').toString().trim().replaceAll('\n', '<br />')
-    if (text.length > maxLength) text = text.substring(0, maxLength) + '...'
 
-    // check footer
-    let footer = req.params.footer
-    if (footer) {
-        if (!isBase64(footer)) {
-            res.status(400).send('Invalid base64 for footer parameter')
-            return
+    for (const [key, value] of Object.entries(params)) {
+        if (value.length > maxLength) {
+            // Truncate with ellipsis
+            params[key] = value.substring(0, maxLength - 3) + '...'
         }
-        footer = Buffer.from(footer, 'base64').toString()
-        if (footer.length > maxLength) footer = footer.substring(0, maxLength) + '...'
-    } else {
-        footer = ''
     }
 
     console.log('Rendering...')
-    console.log('→ Text:', text)
-    console.log('→ Footer:', footer)
+    console.log('→ Text:', params.text)
+    console.log('→ Footer:', params.footer)
+    console.log('→ Date:', params.date)
 
     // debug
     //text = "AutoTube now supports IPFS"
 
     const raw = await getTemplate(template)
-
-    const params = {
-        text,
-        footer
-    }
 
     const html = compileTemplate(raw, params, {
         debug: viewDebug
@@ -107,22 +89,23 @@ function compileTemplate(html, vars, options) {
     let res = html
 
     for (let [k, v] of Object.entries(vars)) {
+        console.log(`Replacing |${k}| with ${v}`)
         res = res.replaceAll(`|${k}|`, v)
     }
 
-    res = res.replaceAll('|body-css|', options.debug ? 'debug' : '')
+    res = res.replaceAll('|body-css|', options.debug ? 'debug' : '');
 
     return res
 }
 
-// not perfect but enough for now
-function isBase64(str) {
-    try {
-        return btoa(atob(str)) === str
-    } catch (err) {
-        return false
-    }
-}
+// // not perfect but enough for now
+// function isBase64(str) {
+//     try {
+//         return btoa(atob(str)) === str
+//     } catch (err) {
+//         return false
+//     }
+// }
 
 const port = process.env.PORT || 3333
 app.listen(port, () => {

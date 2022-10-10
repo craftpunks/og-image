@@ -10,6 +10,12 @@
         width: 800px;
         height: 418px;
         position: relative;
+
+        background-color: #181818;
+        color: #f9f5d7;
+        font-family: Menlo, Fira Code, Monaco, Lucida Console, Liberation Mono,
+        DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace,
+        serif;
       }
 
       body.debug .text {
@@ -30,7 +36,13 @@
         right: 10px;
         bottom: 10px;
         left: 10px;
-        border: 3px solid #000;
+
+        border: 10px solid;
+        border-image-slice: 1;
+        border-width: 5px;
+
+        border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+        
       }
 
       .container {
@@ -41,11 +53,12 @@
         bottom: 30px;
         display: flex;
         flex-direction: column;
+        padding: 20px;
       }
 
       .text {
         flex: 1;
-        line-height: 12ch;
+        /* line-height: 12ch; */
       }
 
       .domain {
@@ -58,8 +71,16 @@
       }
 
       .spy {
-        font-size: 16px;
+        font-size: 3.5rem;
         display: inline-block;
+        margin: 0;
+        /* line-height: 3rem; */
+        color: #ff97cb;
+        font-weight: bold;
+      }
+
+      .dim {
+        opacity: 0.7;
       }
     </style>
   </head>
@@ -70,39 +91,66 @@
 
       <div class="container">
         <div class="text">
-          <div class="spy">|text|</div>
+          <div class="spy" id="text">|text|</div>
         </div>
-        <div class="domain">|footer|</div>
+        <div class="domain">
+          <span id="footer">|footer|</span> - <span id="date" class="dim">|date|</span>
+        </div>
       </div>
     </section>
   </body>
 
   <script>
-    function updateSize() {
-      const wrapper = document.querySelector('.text').getBoundingClientRect()
-      const text = document.querySelector('.spy')
-      let inside = true
-      let size = 16
+    // function updateSize() {
+    //   const wrapper = document.querySelector('.text').getBoundingClientRect()
+    //   const text = document.querySelector('.spy')
+    //   let inside = true
+    //   let size = 16
 
-      while (inside) {
-        const pos = text.getBoundingClientRect()
-        const height = pos.height
-        const width = pos.width
+    //   while (inside) {
+    //     const pos = text.getBoundingClientRect()
+    //     const height = pos.height
+    //     const width = pos.width
 
-        if (height > wrapper.height || width > wrapper.width) {
-          inside = false
-          size -= 1
-        } else {
-          size += 1
-        }
+    //     if (height > wrapper.height || width > wrapper.width) {
+    //       inside = false
+    //       size -= 1
+    //     } else {
+    //       size += 1
+    //     }
 
-        text.style.fontSize = size + 'px'
-        text.style.lineHeight = size * 0.9 + 'px'
+    //     text.style.fontSize = size + 'px'
+    //     text.style.lineHeight = size * 0.9 + 'px'
+    //   }
+    // }
+
+    // ;(function () {
+    //   updateSize()
+    // })()
+
+    const usp = new URLSearchParams(window.location.search)
+    const debug_vals = {'text': null, 'footer': null}
+
+    if (usp.get("t")) {
+      // limit to 200 characters, if longer, truncate and add ellipsis
+      if (usp.get("t").length > 200) {
+        debug_vals.text = usp.get("t").substring(0, 197) + "..."
+      } else {
+        debug_vals.text = usp.get("t")
+      }
+    }
+    if (usp.get("f")) {
+      // limit to 200 characters, if longer, truncate and add ellipsis
+      if (usp.get("f").length > 200) {
+        debug_vals.footer = usp.get("f").substring(0, 197) + "..."
+      } else {
+        debug_vals.footer = usp.get("f")
       }
     }
 
-    ;(function () {
-      updateSize()
-    })()
+    if (usp.get("debug")) {
+      document.getElementById("text").innerHTML = debug_vals.text
+      document.getElementById("footer").innerHTML = debug_vals.footer
+    }
   </script>
 </html>
